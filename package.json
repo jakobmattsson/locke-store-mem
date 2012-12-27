@@ -1,14 +1,14 @@
 {
   "name": "locke-store-mem",
   "description": "An in-memory implementation of a locke storage",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "./lib/db.js",
   "author": "Jakob Mattsson <jakob.mattsson@gmail.com> (jakobmattsson.se)",
   "engines": {
     "node": ">= 0.6.x"
   },
   "devDependencies": {
-    "locke-store-test": "0.2.1",
+    "locke-store-test": "0.3.0",
     "async": "0.1.22",
     "underscore": "1.4.3",
     "should": "1.2.1",

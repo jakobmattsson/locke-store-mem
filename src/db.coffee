@@ -8,10 +8,10 @@ clean = (callback) ->
 
 clean()
 
-noUser = (app, email) -> "There is no user with the email '#{email}' for the app '#{app}'"
-noApp = (app) -> "Could not find an app with the name '#{app}'"
-noNullPassword = -> 'Password cannot be null'
-noEmptyPassword = -> 'Password must be a non-empty string'
+noUser = (app, email) -> new Error("There is no user with the email '#{email}' for the app '#{app}'")
+noApp = (app) -> new Error("Could not find an app with the name '#{app}'")
+noNullPassword = -> new Error('Password cannot be null')
+noEmptyPassword = -> new Error('Password must be a non-empty string')
 
 exports.factory = ->
 
@@ -26,7 +26,7 @@ exports.factory = ->
       return callback(noApp(app)) if !database[app]?
       return callback(noUser(app, email)) if !database[app].users[email]?
       tt = database[app].users[email]?.tokens?[type]?.list?[name]
-      return callback('Incorrect token') if !tt?
+      return callback(new Error('Incorrect token')) if !tt?
       callback(null, tt.data)
 
   addToken: (app, email, type, name, tokenData, callback) ->
@@ -84,7 +84,7 @@ exports.factory = ->
 
     process.nextTick ->
       return callback(noApp(app)) if !database[app]?
-      return callback("User '#{email}' already exists for the app '#{app}'") if database[app].users[email]?
+      return callback(new Error("User '#{email}' already exists for the app '#{app}'")) if database[app].users[email]?
       database[app].users[email] = { data: userData }
       callback null, database[app].users[email].data
 
@@ -100,7 +100,7 @@ exports.factory = ->
       if !database[rootAppName].users[email]?
         callback(noUser(rootAppName, email))
       else if database[app]?
-        callback("App name '#{app}' is already in use")
+        callback(new Error("App name '#{app}' is already in use"))
       else
         database[app] = { users: {}, owner: email }
         callback()
@@ -119,7 +119,7 @@ exports.factory = ->
 
   deleteApp: (app, callback) ->
     process.nextTick ->
-      return callback("It is not possible to delete the app '#{rootAppName}'") if app == rootAppName
+      return callback(new Error("It is not possible to delete the app '#{rootAppName}'")) if app == rootAppName
       return callback(noApp(app)) if !database[app]?
       delete database[app]
       callback()
