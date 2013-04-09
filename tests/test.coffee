@@ -22,5 +22,14 @@ it "should have a clean-method", (done) ->
             isError(err, "There is no user with the email 'email@test.com' for the app 'locke'")
             done()
 
+it "should separate data storage for two different instances", (done) ->
+  store = memstore.factory()
+  store.createUser 'locke', 'email@test.com', { password: 'psspww' }, (err) ->
+    should.not.exist err
+    store = memstore.factory()
+    store.createUser 'locke', 'email@test.com', { password: 'psspww' }, (err) ->
+      should.not.exist err
+      done()
+
 core.runTests memstore.factory, (store, done) ->
   store.clean(done)

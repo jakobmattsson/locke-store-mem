@@ -1,19 +1,24 @@
-database = null
 rootAppName = 'locke'
-
-clean = (callback) ->
-  database = {}
-  database[rootAppName] = { users: {} }
-  callback() if callback
-
-clean()
 
 noUser = (app, email) -> new Error("There is no user with the email '#{email}' for the app '#{app}'")
 noApp = (app) -> new Error("Could not find an app with the name '#{app}'")
 noNullPassword = -> new Error('Password cannot be null')
 noEmptyPassword = -> new Error('Password must be a non-empty string')
 
+
+
 exports.factory = ->
+
+  database = null
+
+  clean = (callback) ->
+    database = {}
+    database[rootAppName] = { users: {} }
+    callback() if callback
+
+  clean()
+
+
 
   comparePassword: (app, email, password, callback) ->
     process.nextTick ->
